@@ -1,5 +1,7 @@
 package org.example.ModelsPatronStrategy;
 
+import java.util.concurrent.CompletableFuture;
+
 public class ShippingCalculator {
     ShippingStrategy shippingStrategy;
     private double weight, width, height, length;
@@ -18,5 +20,9 @@ public class ShippingCalculator {
 
     public double calculateCost() {
         return shippingStrategy.calculateCost(weight, width, height, length, origin, destination);
+    }
+
+    public CompletableFuture<Double> calculateCostAsync() {
+        return CompletableFuture.supplyAsync(this::calculateCost);
     }
 }
