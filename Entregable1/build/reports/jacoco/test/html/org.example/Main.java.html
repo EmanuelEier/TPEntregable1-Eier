@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Main.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Entregable1</a> &gt; <a href="index.source.html" class="el_package">org.example</a> &gt; <span class="el_source">Main.java</span></div><h1>Main.java</h1><pre class="source lang-java linenums">package org.example;
+import org.example.ModelsPatronStrategy.ShippingStrategy;
+import org.example.ModelsPatronStrategy.AirShippingStrategy;
+import org.example.ModelsPatronStrategy.BoatShippingStrategy;
+import org.example.ModelsPatronStrategy.TruckShippingStrategy;
+import org.example.ModelsPatronStrategy.ShippingCalculator;
+import org.example.modelsPatronBridge.PaymentManager;
+import java.util.Scanner;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+<span class="nc" id="L12">public class Main {</span>
+<span class="nc" id="L13">    private static final Scanner scanner = new Scanner(System.in);</span>
+
+    public static void main(String[] args) {
+<span class="nc" id="L16">        boolean continuar = true;</span>
+
+<span class="nc bnc" id="L18" title="All 2 branches missed.">        while (continuar) {</span>
+<span class="nc" id="L19">            mostrarMenu();</span>
+<span class="nc" id="L20">            int opcion = obtenerOpcion();</span>
+
+<span class="nc bnc" id="L22" title="All 4 branches missed.">            switch (opcion) {</span>
+<span class="nc" id="L23">                case 1 -&gt; operacionesPago(scanner);</span>
+<span class="nc" id="L24">                case 2 -&gt; calculoEnvio(scanner);</span>
+<span class="nc" id="L25">                case 3 -&gt; continuar = false;</span>
+            }
+<span class="nc" id="L27">        }</span>
+<span class="nc" id="L28">        System.out.println(&quot;¡Hasta luego!&quot;);</span>
+<span class="nc" id="L29">    }</span>
+
+    private static void mostrarMenu() {
+<span class="nc" id="L32">        System.out.println(&quot;\n=== MENÚ PRINCIPAL ===&quot;);</span>
+<span class="nc" id="L33">        System.out.println(&quot;1. Operaciones de pago&quot;);</span>
+<span class="nc" id="L34">        System.out.println(&quot;2. Cálculo de envío&quot;);</span>
+<span class="nc" id="L35">        System.out.println(&quot;3. Salir&quot;);</span>
+<span class="nc" id="L36">        System.out.print(&quot;Seleccione una opción: &quot;);</span>
+<span class="nc" id="L37">    }</span>
+
+    private static int obtenerOpcion() {
+        try {
+<span class="nc" id="L41">            return Integer.parseInt(scanner.nextLine());</span>
+<span class="nc" id="L42">        } catch (NumberFormatException e) {</span>
+<span class="nc" id="L43">            return -1;</span>
+        }
+    }
+
+    private static void operacionesPago(Scanner scanner) {
+<span class="nc" id="L48">        PaymentManager paymentManager = new PaymentManager();</span>
+
+<span class="nc" id="L50">        System.out.println(&quot;\n--- Operaciones de pago ---&quot;);</span>
+<span class="nc" id="L51">        System.out.print(&quot;Ingrese el monto: &quot;);</span>
+<span class="nc" id="L52">        double amount = scanner.nextDouble();</span>
+<span class="nc" id="L53">        scanner.nextLine();</span>
+
+<span class="nc" id="L55">        System.out.print(&quot;Ingrese el proveedor (Paypal o MercadoPago): &quot;);</span>
+<span class="nc" id="L56">        String provider = scanner.nextLine();</span>
+
+<span class="nc" id="L58">        System.out.print(&quot;Ingrese que desea hacer (1: pagar, 2: reembolsar): &quot;);</span>
+<span class="nc" id="L59">        int opcion = scanner.nextInt();</span>
+
+        CompletableFuture&lt;Boolean&gt; future;
+
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        if (opcion == 1) {</span>
+<span class="nc" id="L64">            future = paymentManager.processPaymentAsync(amount, provider);</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        } else if (opcion == 2) {</span>
+<span class="nc" id="L66">            future = paymentManager.refundPaymentAsync(amount, provider);</span>
+        } else {
+<span class="nc" id="L68">            System.out.println(&quot;Opción inválida.&quot;);</span>
+<span class="nc" id="L69">            return;</span>
+        }
+
+        try {
+<span class="nc" id="L73">            Boolean result = future.get();</span>
+<span class="nc" id="L74">            System.out.println(&quot;Operación completada exitosamente: &quot; + result);</span>
+<span class="nc" id="L75">        } catch (InterruptedException e) {</span>
+<span class="nc" id="L76">            System.out.println(&quot;La operación fue interrumpida.&quot;);</span>
+<span class="nc" id="L77">            Thread.currentThread().interrupt();</span>
+<span class="nc" id="L78">        } catch (ExecutionException e) {</span>
+<span class="nc" id="L79">            System.out.println(&quot;Error durante la operación: &quot; + e.getCause().getMessage());</span>
+<span class="nc" id="L80">        }</span>
+<span class="nc" id="L81">    }</span>
+
+    private static void calculoEnvio(Scanner scanner) {
+<span class="nc" id="L84">        System.out.println(&quot;\n--- Cálculo de Envío ---&quot;);</span>
+<span class="nc" id="L85">        System.out.print(&quot;Ingrese el peso en gramos: &quot;);</span>
+<span class="nc" id="L86">        double weight = scanner.nextDouble();</span>
+
+<span class="nc" id="L88">        System.out.print(&quot;Ingrese el ancho (cm): &quot;);</span>
+<span class="nc" id="L89">        double width = scanner.nextDouble();</span>
+
+<span class="nc" id="L91">        System.out.print(&quot;Ingrese el alto (cm): &quot;);</span>
+<span class="nc" id="L92">        double height = scanner.nextDouble();</span>
+
+<span class="nc" id="L94">        System.out.print(&quot;Ingrese el largo (cm): &quot;);</span>
+<span class="nc" id="L95">        double lenght = scanner.nextDouble();</span>
+<span class="nc" id="L96">        scanner.nextLine();</span>
+
+<span class="nc" id="L98">        System.out.print(&quot;Ingrese el origen: &quot;);</span>
+<span class="nc" id="L99">        String origin = scanner.nextLine();</span>
+
+<span class="nc" id="L101">        System.out.print(&quot;Ingrese el destino: &quot;);</span>
+<span class="nc" id="L102">        String destination = scanner.nextLine();</span>
+
+<span class="nc" id="L104">        System.out.print(&quot;Ingrese el tipo de envío (air, truck, boat): &quot;);</span>
+<span class="nc" id="L105">        String tipoEnvio = scanner.nextLine();</span>
+
+        ShippingStrategy shippingStrategy;
+<span class="nc bnc" id="L108" title="All 4 branches missed.">        switch (tipoEnvio.toLowerCase()) {</span>
+            case &quot;air&quot;:
+<span class="nc" id="L110">                shippingStrategy = new AirShippingStrategy();</span>
+<span class="nc" id="L111">                break;</span>
+            case &quot;truck&quot;:
+<span class="nc" id="L113">                shippingStrategy = new TruckShippingStrategy();</span>
+<span class="nc" id="L114">                break;</span>
+            case &quot;boat&quot;:
+<span class="nc" id="L116">                shippingStrategy = new BoatShippingStrategy();</span>
+<span class="nc" id="L117">                break;</span>
+            default:
+<span class="nc" id="L119">                System.out.println(&quot;Tipo de envío inválido.&quot;);</span>
+<span class="nc" id="L120">                return;</span>
+        }
+
+<span class="nc" id="L123">        ShippingCalculator shippingCalculator = new ShippingCalculator(weight, width, height, lenght, origin, destination, shippingStrategy);</span>
+<span class="nc" id="L124">        CompletableFuture&lt;Double&gt; envioFuture = shippingCalculator.calculateCostAsync();</span>
+
+        try {
+<span class="nc" id="L127">            Double costo = envioFuture.get();</span>
+<span class="nc" id="L128">            System.out.println(&quot;Costo de envío: $&quot; + costo);</span>
+<span class="nc" id="L129">        } catch (InterruptedException e) {</span>
+<span class="nc" id="L130">            System.out.println(&quot;La operación fue interrumpida.&quot;);</span>
+<span class="nc" id="L131">            Thread.currentThread().interrupt();</span>
+<span class="nc" id="L132">        } catch (ExecutionException e) {</span>
+<span class="nc" id="L133">            System.out.println(&quot;Error durante el cálculo del envío: &quot; + e.getCause().getMessage());</span>
+<span class="nc" id="L134">        }</span>
+<span class="nc" id="L135">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

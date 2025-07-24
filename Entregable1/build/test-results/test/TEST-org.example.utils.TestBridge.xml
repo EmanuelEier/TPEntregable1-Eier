@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.example.utils.TestBridge" tests="6" skipped="0" failures="0" errors="0" timestamp="2025-07-24T18:18:35" hostname="DESKTOP-A5D306E" time="0.039">
+  <properties/>
+  <testcase name="reembolsoConProveedorNoRegistrado()" classname="org.example.utils.TestBridge" time="0.021"/>
+  <testcase name="reembolsoConPaypal()" classname="org.example.utils.TestBridge" time="0.007"/>
+  <testcase name="reembolsoConMercadoPago()" classname="org.example.utils.TestBridge" time="0.002"/>
+  <testcase name="pagoConProveedorNoRegistrado()" classname="org.example.utils.TestBridge" time="0.001"/>
+  <testcase name="pagoConMercadoPago()" classname="org.example.utils.TestBridge" time="0.001"/>
+  <testcase name="pagoConPaypal()" classname="org.example.utils.TestBridge" time="0.001"/>
+  <system-out><![CDATA[Se ha reeembolsado el pago de $2000.0a través de Paypal
+Se ha reembolsado el pago de $2000.0a través de Mercado Pago
+Pago autorizado con éxito
+Pago capturado con éxito
+Se ha procesado el pago de $2000.0a través de Mercado Pago
+Pago autorizado con éxito
+Pago capturado con éxito
+Se ha procesado el pago de $2000.0a través de Paypal
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
